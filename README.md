@@ -1,14 +1,14 @@
 # URF
 
 ## Description
-URF is a universal hot-reload tool, similar to various NPM offerings. It watches a specified directory and executes a makefile target in that directory upon change.
+URF is a universal hot-reload tool, similar to various NPM offerings. It watches a directory and executes a makefile target in that directory upon change. In the spirit of Ken, URF was made to be as simple as possible. Just `urf` in a directory with a makefile and you're hot reloading.
 
 ## Installation
 `go get github.com/khodges42/urf`
 
 ## Usage
 ```
-urf ~/code/myProject/
+urf
   -dir string
     	Directory to watch (Default is .) (default ".")
   -maketarget string
