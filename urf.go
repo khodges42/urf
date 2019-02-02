@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/radovskyb/watcher"
 	"log"
@@ -28,17 +29,14 @@ var urf = `
 
 
 func main() {
+	watchedDir := flag.String("dir", ".", "Directory to watch (Default is .)")
+	makeTarget := flag.String("maketarget", "urf", "Make Target (Default is urf)")
+	limiterTime := flag.Int("rate-limiter", 2000, "Reload time, in ms (default is 2000)")
 
-	if len(os.Args) < 2 || len(os.Args) > 3 {
-		fmt.Printf("Usage: urf dir_to_watch")
-		os.Exit(1)
-	}
+	flag.Parse()
+	makeFile := fmt.Sprintf("%s/%s", *watchedDir, "Makefile")
 
-	watchedDir := os.Args[1]
-	makePath := fmt.Sprintf("%s/%s",watchedDir,"Makefile")
-	makeTarget := "urf"
-
-	if _, err := os.Stat(makePath); os.IsNotExist(err) {
+	if _, err := os.Stat(makeFile); os.IsNotExist(err) {
 		fmt.Printf("Expecting a Makefile in your watched directory.")
 		os.Exit(1)
 	}
@@ -54,7 +52,7 @@ func main() {
 		for {
 			select {
 			case <-w.Event:
-				executeMake(watchedDir, makeTarget)
+				executeMake(*watchedDir, *makeTarget)
 			case err := <-w.Error:
 				log.Fatalln(err)
 			case <-w.Closed:
@@ -63,11 +61,11 @@ func main() {
 		}
 	}()
 
-	if err := w.AddRecursive(watchedDir); err != nil {
+	if err := w.AddRecursive(*watchedDir); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err := w.Start(time.Millisecond * 2000); err != nil {
+	if err := w.Start(time.Millisecond * time.Duration(*limiterTime)); err != nil {
 		log.Fatalln(err)
 	}
 }

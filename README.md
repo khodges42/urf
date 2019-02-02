@@ -7,7 +7,15 @@ URF is a universal hot-reload tool, similar to various NPM offerings. It watches
 `go get github.com/khodges42/urf`
 
 ## Usage
-`urf ~/code/myProject/`
+`urf ~/code/myProject/
+  -dir string
+    	Directory to watch (Default is .) (default ".")
+  -maketarget string
+    	Make Target (Default is urf) (default "urf")
+  -rate-limiter int
+    	Reload time, in ms (default is 2000) (default 2000)
+
+`
 
 ### Makefile setup
 URF will be looking for a file in the specified directory named `Makefile`. In this makefile, there should be a target named `urf:` that specifies what gets executed.
